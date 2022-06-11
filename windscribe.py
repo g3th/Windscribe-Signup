@@ -1,7 +1,6 @@
 import requests
-import shlex
-import subprocess
 from header import titleHeader
+
 username = 'yourusername'
 password = 'yourpassword'
 email = 'youremail' #some temp-email api?
