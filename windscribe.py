@@ -30,9 +30,5 @@ with requests.session() as windscribe:
 	post = windscribe.post(signup, data=payload)
 	
 	print(postCaptcha) #one day...
-<<<<<<< HEAD
-	
 	
 windscribe.close()
-=======
->>>>>>> 55d6f62319cad910ed6aa0bfcc34797e37d4038d
