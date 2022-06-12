@@ -1,9 +1,11 @@
 import requests
 import shlex
 import subprocess
+
+from generator import password_generator
+from generator import u_gen
 from header import titleHeader
-username = 'yourusername'
-password = 'yourpassword'
+
 email = 'youremail' #some temp-email api?
 
 signup = 'https://windscribe.com/signup'
@@ -11,13 +13,17 @@ signup = 'https://windscribe.com/signup'
 
 # Your own credentials here --->
 
-payload = {'signup': '1','username':username,'password':password,'password2': password,'email': email,'voucher_code': '','captcha': '','robert_status': '1','unlimited_plan': '0'}
-
 print('\x1bc')
 
 titleHeader()
 
 print('-'*60)
+
+p=password_generator(); u=u_gen()
+password=p.gen(10); username = u.name()
+
+
+payload = {'signup': '1','username':username,'password':password,'password2': password,'email': '','voucher_code': '','captcha': '','robert_status': '1','unlimited_plan': '0'}
 
 with requests.session() as windscribe:
 	
