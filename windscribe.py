@@ -1,6 +1,4 @@
 import requests
-import shlex
-import subprocess
 
 from generator import password_generator
 from generator import u_gen
