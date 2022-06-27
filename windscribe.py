@@ -23,20 +23,16 @@ with requests.session() as windscribe:
 	
 	# Your Ipvanish proxy credentials (not the same as login!) --->
 
-	ipvanish = {'http':'socks5h://'+ pickACard('', '')}
-	myip = windscribe.get('http://httpbin.org/ip', proxies = ipvanish)
+	 
+	myip = windscribe.get('http://httpbin.org/ip')
 	print('\033[38;5;236mUsername: \033[38;5;242m'+username+" \033[38;5;236m| Password: \033[38;5;242m"+password+"\033[38;5;236m | "+ "IP ----> \033[38;5;242m", myip.text.split('"')[3],"\n")
-	while True:
-	
-		getHeaders = windscribe.get(signup); heads = getHeaders.headers
-		post = windscribe.post(signup, data=payload, proxies = ipvanish)
-		print(post.text.split('"')[2])
-		preCaptcha = post.text.split('/')[2].strip('"}')
-		if ':1337' in post.text:
-			pass
-		else:
-			subprocess.run(shlex.split('wget --output-file=view.png "'+'https://windscribe.com/captcha/'+preCaptcha+'"'),shell=False)
-			break
+	#getHeaders = windscribe.post(signup); heads = getHeaders.headers
+	#print(heads['user-agent'])
+	post = windscribe.post(signup,data=payload)
+	print(post.text)
+	preCaptcha = post.text.split('/')[2].strip('"}')
+	screenshot(preCaptcha)
+	#subprocess.run(shlex.split('wget --output-file=view.png "'+'https://windscribe.com/captcha/'+preCaptcha+'"'),shell=False)	
 	#subprocess.run('
 	#print(postCaptcha) one day...
 	
