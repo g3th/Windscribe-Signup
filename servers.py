@@ -2,7 +2,7 @@ import os
 import requests
 import subprocess
 import shlex
-
+import json
 from pathlib import Path
 from bs4 import BeautifulSoup as soup
 from random import randint
@@ -60,4 +60,25 @@ class connect_to_vpn:
 			def delete_connection(self):
 				
 				subprocess.run((self.delete_connection), shell = False, stdout = subprocess.DEVNULL)
+
+temp_mail_api_endpoint ='https://www.1secmail.com/api/v1/'
+
+created_mailbox = requests.get(temp_mail_api_endpoint, params = {'action':'genRandomMailbox','count':'1'})
+
+mailbox_login = str(created_mailbox.text).split('"')[1].split("@")[0]
+mailbox_domain = str(created_mailbox.text).split('"')[1].split("@")[1]
 				
+get_email_messages = requests.get(temp_mail_api_endpoint, params = {'action':'getMessages','login': mailbox_login,'domain': mailbox_domain})
+
+print(get_email_messages.content)
+
+#request_mail = requests.get(page, params = {'action':'readMessage','login':'m1dq7xugccn','domain':'1secmail.com','id':'216467055'}).json()
+
+#print(json.dumps(request_mail,indent=2))
+
+
+
+
+
+
+

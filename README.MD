@@ -4,8 +4,16 @@ Not functional. Hopefully solving captcha with OCR one day...
 
 ---------------------------------------------------------------
 
-### Requires: ###
+### Requires: ##
 
-An Ipvanish account, and proxy username:password to connect the proxy, i.e.:
+Tesseract:
 
-```socks5://user:pass@ipvanish-addy.com:port1080```
+```sudo apt install tesseract-ocr```
+
+Chromedriver:
+
+```sudo apt-get install chromium-driver```
+
+Pytesseract library:
+
+```pip3 install pytesseract```

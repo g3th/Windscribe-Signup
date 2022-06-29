@@ -20,3 +20,4 @@ password=p.gen(10); username = u.name()
 screenshot(username, password, email)
 print(ocr(str(Path(__file__).parent)+'/my_screenshot.png'))
 
+
