@@ -3,6 +3,7 @@ import requests
 import subprocess
 import shlex
 
+from pathlib import Path
 from bs4 import BeautifulSoup as soup
 from random import randint
 
@@ -37,9 +38,26 @@ class download_ovpn_config:
 		
 		def download_config(self):
 		
-			parse_ovpn_configuration_link = shlex.split('wget -O config.ovpn "'+self.ovpn_configuration_link+'"')
+			download = download_ovpn_config.get_ovpn_configuration_link(self)
+			parse_ovpn_configuration_link = shlex.split('wget -O config.ovpn "'+ download +'"')
 			subprocess.run((parse_ovpn_configuration_link), shell=False, stderr= subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+			
+class connect_to_vpn:
 
-start = download_ovpn_config()
-
-print(start.get_ovpn_configuration_link())
+			def __init__(self):
+				
+				self.ovpn_config = shlex.split ('nmcli connection import type openvpn file ' + str(Path(__file__).parent) + '/config.ovpn')
+				self.connect = shlex.split('nmcli connection up config')
+				self.delete_connection = shlex.split('nmcli connection delete id config')				
+			def set_up_nmcli_connection(self):
+			
+				try:
+					subprocess.run ((self.ovpn_config), shell = False, stdout = subprocess.DEVNULL)
+					subprocess.run ((self.connect), shell= False, stdout = subprocess.DEVNULL)				
+				except:
+					print("Error")
+					
+			def delete_connection(self):
+				
+				subprocess.run((self.delete_connection), shell = False, stdout = subprocess.DEVNULL)
+				

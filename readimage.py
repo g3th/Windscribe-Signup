@@ -6,16 +6,16 @@ import requests
 from selenium import webdriver
 from PIL import Image
 
-def screenshot():
+def screenshot(user,password,email):
 	chrome_options = webdriver.ChromeOptions()
-	chrome_options.add_argument('
 	browser = webdriver.Chrome()
-	browser.set_window_size(200,240); browser.get('https://windscribe.com/signup');time.sleep(1)
-	User = browser.find_element_by_xpath('//*[@id="generate_username"]'); User.click()
-	Pass = browser.find_element_by_xpath('//*[@id="generate_password"]'); Pass.click()
-	Mail = browser.find_element_by_xpath('//*[@id="signup_email"]'); Mail.send_keys("myemail@email.com")
-	bSubmit = browser.find_element_by_xpath('//*[@id="signup_button"]'); bSubmit.click();time.sleep(1)
-	screenshot = browser.save_screenshot('my_screenshot.png');time.sleep(2000)
+	browser.set_window_size(200,740); browser.get('https://windscribe.com/signup');time.sleep(1)
+	User = browser.find_element_by_xpath('//*[@id="username"]'); User.send_keys(user)
+	Pass = browser.find_element_by_xpath('//*[@id="pass1"]'); Pass.send_keys(password)
+	Mail = browser.find_element_by_xpath('//*[@id="pass2"]'); Mail.send_keys(email)
+	bSubmit = browser.find_element_by_xpath('//*[@id="signup_button"]')
+	bSubmit.click();time.sleep(4)
+	screenshot = browser.save_screenshot('my_screenshot.png');time.sleep(2)
 	#driver.quit()
 
 def ocr(directory):
@@ -30,7 +30,6 @@ def ocr(directory):
 	captcha = pytesseract.image_to_string(openImage)
 	return captcha
 
-screenshot()
-#screenshot('https://windscribe.com/captcha/view?_CAPTCHA&amp;t=0.10549100+1655141582')
+
 
 
