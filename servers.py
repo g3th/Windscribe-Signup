@@ -1,7 +1,6 @@
 import os
 import requests
 import subprocess
-import shlex
 import json
 
 from pathlib import Path
@@ -41,31 +40,30 @@ class download_ovpn_config:
 	def download_config(self):
 
 		download = download_ovpn_config.get_ovpn_configuration_link(self)
-		parse_ovpn_configuration_link = ['wget', '-O', 'config.ovpn', '"', download, '"']
-
-		
-		subprocess.run(([parse_ovpn_configuration_link]), shell=False, stderr= subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-			
+		parse_ovpn_configuration_link = ['wget', '-O', 'config.ovpn', '"', download, '"']		
+		subprocess.run(parse_ovpn_configuration_link, shell=False, stderr= subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+					
 class connect_to_vpn:
 
 	def __init__(self):
 	
-		self.ovpn_config = shlex.split ('nmcli connection import type openvpn file ' + str(Path(__file__).parent) + '/config.ovpn')
-		self.connect = shlex.split('nmcli connection up config')
-		self.delete_connection = shlex.split('nmcli connection delete id config')
+		self.ovpn_config = ['nmcli','connection','import','type','openvpn','file', str(Path(__file__).parent)+'/config.ovpn']
+		self.connect = ['nmcli','connection','up','config']
+		self.delete_connection = ['nmcli','connection','delete','id','config']
 				
 	def set_up_nmcli_connection(self):
-			
-			nmcli_add_vpn = subprocess.run ((self.ovpn_config), shell = False, stdout = subprocess.DEVNULL, stderr = subprocess.PIPE)
-			nmcli_connect_vpn = subprocess.run ((self.connect), shell= False, stdout = subprocess.DEVNULL, stderr = subprocess.PIPE)
-			
-			return nmcli_connect_vpn.stderr
+	
+		ping_command = ['ping','-c1','8.8.8.8']	
+		nmcli_add_vpn = subprocess.run (self.ovpn_config, shell = False)#, stdout = subprocess.DEVNULL, stderr = subprocess.PIPE)
+		nmcli_connect_vpn = subprocess.run (self.connect, shell= False)#, stdout = subprocess.DEVNULL, stderr = subprocess.PIPE)
+		ping_the_connection = subprocess.run(ping_command, shell=False)#, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		
+		return nmcli_connect_vpn.stderr, ping_the_connection.stdout
 				
 	def delete_connection(self):
-	
-		subprocess.run((self.delete_connection), shell = False, stdout = subprocess.DEVNULL)
 		
-	
+		subprocess.run(self.delete_connection, shell = False)#, stdout = subprocess.DEVNULL)
+				
 class create_and_store_a_mailbox:
 	
 	def __init__(self):
@@ -92,17 +90,15 @@ class create_and_store_a_mailbox:
 			create_and_store_a_mailbox.write_mailbox_to_file(self)
 						
 	def check_email(self):
-		mailboxes_list = []
-		
+	
+		mailboxes_list = []		
 		with open('temp_mailboxes','r') as fetch_mailboxes:
 			for lines in fetch_mailboxes:
-				mailboxes_list.append(lines)
-				
+				mailboxes_list.append(lines)			
 		for box in mailboxes_list:
 			fetch_email_message_id = requests.get(temp_mail_api_endpoint, params = {'action':'getMessages','login':box.split('"')[1].split("@")[0] ,'domain': box.split('"')[1].split("@")[1]}).json()			
 			email_message_id = fetch_email_message_id[0]['id']
-			get_email_message = requests.get(temp_mail_api_endpoint, params = {'action':'readMessage','login':box.split('"')[1].split("@")[0] ,'domain': box.split('"')[1].split("@")[1], 'id':email_message_id}).json()
-			
+			get_email_message = requests.get(temp_mail_api_endpoint, params = {'action':'readMessage','login':box.split('"')[1].split("@")[0] ,'domain': box.split('"')[1].split("@")[1], 'id':email_message_id}).json()			
 			for lines in get_email_message['body']:
 				if '<a href' in lines:
 					print (lines)
