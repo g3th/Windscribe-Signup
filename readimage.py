@@ -12,11 +12,12 @@ def screenshot(user,password,email):
 	browser.set_window_size(200,740); browser.get('https://windscribe.com/signup');time.sleep(1)
 	User = browser.find_element_by_xpath('//*[@id="username"]'); User.send_keys(user)
 	Pass = browser.find_element_by_xpath('//*[@id="pass1"]'); Pass.send_keys(password)
-	Repeat_Pass = browser.find_element_by_xpath('//*[@id="pass2"]'); Repeat_Pass.send_keys(password)
+	Repeat_Pass = browser.find_element_by_xpath('//*[@id="pass2"]');Repeat_Pass.send_keys(password)
+	Email = browser.find_element_by_xpath('//*[@id="signup_email"]');Email.send_keys(email)
 	bSubmit = browser.find_element_by_xpath('//*[@id="signup_button"]')
 	bSubmit.click();time.sleep(4)
 	screenshot = browser.save_screenshot('my_screenshot.png');time.sleep(2)
-	#driver.quit()
+
 
 def ocr(directory):
 
