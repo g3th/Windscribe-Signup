@@ -27,10 +27,10 @@ class download_ovpn_config:
 
 		return configuration_download_page_links
 
-	def get_ovpn_configuration_link(self):
+	def get_ovpn_configuration_link(self, download_link_index):
 
 		config_download_page_links = download_ovpn_config.get_all_page_links(self)
-		download_page_request = requests.get(page+configuration_download_page_links[randint(0,len(configuration_download_page_links)-1)])
+		download_page_request = requests.get(page+configuration_download_page_links[download_link_index])
 		download_page_links = soup(download_page_request.text,'html.parser')
 		obtain_download_page_links = download_page_links.find_all(href = True)
 		ovpn_configuration_link = page[:-4] + str(obtain_download_page_links[35:36]).split('"')[1].replace('&amp;','&')

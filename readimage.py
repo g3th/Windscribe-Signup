@@ -9,7 +9,7 @@ from PIL import Image
 def screenshot(user,password,email):
 	
 	browser = webdriver.Chrome()
-	browser.set_window_size(200,740); browser.get('https://windscribe.com/signup');time.sleep(1)
+	browser.set_window_size(100,100); browser.get('https://windscribe.com/signup');time.sleep(1)
 	User = browser.find_element_by_xpath('//*[@id="username"]'); User.send_keys(user)
 	Pass = browser.find_element_by_xpath('//*[@id="pass1"]'); Pass.send_keys(password)
 	Repeat_Pass = browser.find_element_by_xpath('//*[@id="pass2"]');Repeat_Pass.send_keys(password)
