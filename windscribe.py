@@ -15,12 +15,12 @@ file_path = str(Path(__file__).parent)
 p=password_generator()
 u=username_generator()
 
-#open_vpn = servers.download_ovpn_config()
-#connect = servers.connect_to_vpn()
+open_vpn = servers.download_ovpn_config()
+connect = servers.connect_to_vpn()
 tempmail = create_and_store_a_mailbox()
 
-# Create a file of available VPNs at VPNGate
-# Please comment these out if VPNGate is down, as you will need to use your own VPN/Proxies
+# Check valid VPN Gate Addresses
+# Please comment these out if VPN Gate is down, as you will need to use your own VPN/Proxies
 # in order to avoid Cloudflare IUAM block.
 
 while True:
@@ -101,6 +101,10 @@ while True:
 	else:
 		write_credentials_to_file(credentials_list)
 		break
+		
+# Start browser, generate + input and write credentials to file
+# Take a screenshot, crop the screenshot, read the captcha with Tesseract
+# Return the captcha string, and enter it in browser
 		
 read_email_from_file = open('config_files/temp_mailboxes','r')
 email = read_email_from_file.readline().split('"')[1]
