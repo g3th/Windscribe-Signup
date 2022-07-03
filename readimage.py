@@ -45,10 +45,8 @@ class get_captcha:
 		
 		screenshot_image = Image.open(r"config_files/my_screenshot.png")
 		width, height = screenshot_image.size
-		left = 160
-		top = 350
-		right = 300
-		bottom = 420
+		left = 160; right = 300
+		top = 350; bottom = 420		
 		captcha_image = screenshot_image.crop((left, top, right, bottom))
 		newsize = (400, 400)
 		captcha_image = captcha_image.resize(newsize)
