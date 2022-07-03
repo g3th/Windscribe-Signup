@@ -1,8 +1,9 @@
-
+import io
+import pytesseract
 import subprocess
 
 from pathlib import Path
-
+from PIL import Image
 def time_out():
 
 	while True:
@@ -25,5 +26,33 @@ def test_list_because_strager_banned_me_from_shlex():
 	print(ovpn_config)
 	nmcli_add_vpn = subprocess.run (ovpn_config, shell = False)
 
+def read_captcha(directory):
 
+	inputOutput = io.BytesIO()
+	openImage = Image.open(directory)
+	openImage.save(inputOutput, "PNG")
+	inputOutput.seek(0)
+	byteImg = inputOutput.read()
+	dataBytesIO = io.BytesIO(byteImg)
+	openImage = Image.open(dataBytesIO)
+	captcha = pytesseract.image_to_string(openImage)
+	
+	return captcha
+
+def resize_the_screenshot():
+	screenshot_image = Image.open(r"my_screenshot.png")
+	width, height = screenshot_image.size
+	left = 160
+	top = 350
+	right = 300
+	bottom = 420
+	captcha_image = screenshot_image.crop((left, top, right, bottom))
+	newsize = (400, 400)
+	captcha_image = captcha_image.resize(newsize)
+	captcha_image.save('captcha_image.png')
+
+resize_the_screenshot()
+captcha = read_captcha('captcha_image.png').strip()
+
+print(captcha)
 

@@ -26,31 +26,31 @@ class download_ovpn_config:
 				configuration_download_page_links.append(str(link).split('"')[1].replace('&amp;','&'))
 
 		return configuration_download_page_links
-
-	def get_ovpn_configuration_link(self, download_link_index):
-
-		config_download_page_links = download_ovpn_config.get_all_page_links(self)
-		download_page_request = requests.get(page+configuration_download_page_links[download_link_index])
-		download_page_links = soup(download_page_request.text,'html.parser')
-		obtain_download_page_links = download_page_links.find_all(href = True)
-		ovpn_configuration_link = page[:-4] + str(obtain_download_page_links[35:36]).split('"')[1].replace('&amp;','&')
-		return ovpn_configuration_link
-
-	def download_config(self):
-		print('Downloading Open VPN config file...')
-		download = download_ovpn_config.get_ovpn_configuration_link(self)
-		parse_ovpn_configuration_link = ['wget', '-O', 'config.ovpn', '"', download, '"']		
-		subprocess.run(parse_ovpn_configuration_link, shell=False, stderr= subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 		
 	def delete_config(self):
 		
-		os.remove('config.ovpn')
-					
+		os.remove('config_files/config.ovpn')
+		
+def download_config(config_url):
+	print('Downloading Open VPN config file...')
+	download = config_url
+	parse_ovpn_configuration_link = ['wget', '-O', 'config_files/config.ovpn', '"', download, '"']		
+	subprocess.run(parse_ovpn_configuration_link, shell=False, stderr= subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+		
+def get_ovpn_configuration_link(page_link):
+
+	config_download_page_links = page_link
+	download_page_request = requests.get(config_download_page_links)
+	download_page_links = soup(download_page_request.text,'html.parser')
+	obtain_download_page_links = download_page_links.find_all(href = True)
+	ovpn_configuration_link = page[:-4] + str(obtain_download_page_links[35:36]).split('"')[1].replace('&amp;','&')
+	return ovpn_configuration_link
+				
 class connect_to_vpn:
 
 	def __init__(self):
 	
-		self.ovpn_config = ['nmcli','connection','import','type','openvpn','file', str(Path(__file__).parent)+'/config.ovpn']
+		self.ovpn_config = ['nmcli','connection','import','type','openvpn','file', str(Path(__file__).parent)+'/config_files/config.ovpn']
 		self.connect = ['nmcli','connection','up','config']
 		self.delete_connection = ['nmcli','connection','delete','id','config']
 				
