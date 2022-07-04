@@ -56,8 +56,8 @@ class connect_to_vpn:
 				
 	def set_up_nmcli_connection(self):
 			
-		nmcli_add_vpn = subprocess.run (self.ovpn_config, shell = False)
-		nmcli_connect_vpn = subprocess.run (self.connect, shell= False, stdout = subprocess.PIPE, stderr = subprocess.PIPE)	
+		nmcli_add_vpn = subprocess.run (self.ovpn_config, shell = False, stdout = subprocess.DEVNULL)
+		nmcli_connect_vpn = subprocess.run (self.connect, shell= False, stdout = subprocess.DEVNULL, stderr = subprocess.PIPE)	
 		return nmcli_connect_vpn.stderr
 		
 	def ping_connection(self):
@@ -76,4 +76,4 @@ class connect_to_vpn:
 		
 	def delete_nmcli_connection(self):
 		
-		subprocess.run(self.delete_connection, shell = False)#, stdout = subprocess.DEVNULL)
+		subprocess.run(self.delete_connection, shell = False, stdout = subprocess.DEVNULL)

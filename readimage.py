@@ -34,7 +34,7 @@ class get_captcha:
 		self.bSubmit.click()
 		time.sleep(3)
 	
-	def close_browser_on_error(self):
+	def close_browser(self):
 	
 		self.browser.close()
 		

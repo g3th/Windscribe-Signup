@@ -3,16 +3,17 @@ import time
 import os
 import shutil
 
+from header import titleHeader
 from bs4 import BeautifulSoup as soup
 from selenium import webdriver
+from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException
 from random import randint
 from pathlib import Path
-from readimage import get_captcha
 from generator import password_generator, username_generator, write_credentials_to_file
-from header import titleHeader
+from readimage import get_captcha
 from email_confirmation import confirmation_email
 
-page = 'https://www.vpngate.net/en/'
+vpngate = 'https://www.vpngate.net/en/'
 
 print('\x1bc')
 
@@ -49,12 +50,13 @@ number_of_created_accounts = 0
 # Check Valid VPN, Connect, Create Accounts
 
 while number_of_created_accounts < 5:
+
 	flag = 0 
 	print('\x1bc')
 	titleHeader()
 	
 	with open('config_files/openvpn_config_url_list','r') as urls_file:
-		page_link = page + urls_file.readlines()[randint(0,links_list-1)]
+		page_link = vpngate + urls_file.readlines()[randint(0 , links_list-1)]
 		
 	url = servers.get_ovpn_configuration_link(page_link)
 	servers.download_config(url)
@@ -63,10 +65,10 @@ while number_of_created_accounts < 5:
 	print('Connecting to VPN...')
 	
 	if 'Error' in str(connect.set_up_nmcli_connection()):
-		print('Connection Refused'); time.sleep(1);flag = 1
+		print('Connection Refused'); time.sleep(1); flag = 1
 			
 	if '0 received' in str(connect.ping_connection()):
-		print('Connection Timed Out'); time.sleep(1);flag = 1
+		print('Connection Timed Out'); time.sleep(1); flag = 1
 	
 	elif flag == 0:
 		print('Connection Successful. Current IP: '+ connect.fetch_IPaddr())
@@ -87,21 +89,25 @@ while number_of_created_accounts < 5:
 		# Return the captcha string, and enter it in browser
 		
 		captcha = get_captcha()
-		captcha.enter_signup_credentials(username, password, email)
-		
+			
 		try:
-			abuse = soup.find('div',{'class':'content_message error'})
-			if 'Abuse detected' in abuse:
-				captcha.close_browser_on_error()
-				break
-		except:
+			captcha.enter_signup_credentials(username, password, email)
 			captcha.take_browser_screenshot('config_files/my_screenshot.png')
 			captcha.resize_the_screenshot()
 			captcha_result = captcha.read_captcha_by_ocr('config_files/captcha_image.png').strip()
 			captcha.enter_captcha(captcha_result)
 			tempmail.get_confirmation_link_email()
 			tempmail.click_confirmation_link()
-
+			captcha.close_browser()
 			number_of_created_accounts +=1
-		connect.delete_nmcli_connection()
-		open_vpn.delete_config()
+			
+		except (NoSuchElementException, ElementNotInteractableException):
+		
+			captcha.close_browser()
+			print('Abuse Detected/IAUM, Closing Browser, Changing VPN')
+			time.sleep(2)
+			
+	connect.delete_nmcli_connection()
+	open_vpn.delete_config()
+
+captcha.close_browser()
