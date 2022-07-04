@@ -30,6 +30,7 @@ class download_ovpn_config:
 	def delete_config(self):
 		
 		os.remove('config_files/config.ovpn')
+
 		
 def download_config(config_url):
 	print('Downloading Open VPN config file...')

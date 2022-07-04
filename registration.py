@@ -2,12 +2,13 @@ import io
 import pytesseract
 import time
 import requests
+import os
 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium import webdriver
 from PIL import Image
 
-class get_captcha:
+class registration_process:
 
 	def __init__(self):
 		
@@ -20,19 +21,19 @@ class get_captcha:
 	def enter_signup_credentials(self,user, password, email):
 	
 		time.sleep(1)
+		
 		User = self.browser.find_element_by_xpath('//*[@id="username"]')
 		User.send_keys(user)
-		
+	
 		Pass = self.browser.find_element_by_xpath('//*[@id="pass1"]')
 		Pass.send_keys(password)
-		
+	
 		Repeat_Pass = self.browser.find_element_by_xpath('//*[@id="pass2"]')
 		Repeat_Pass.send_keys(password)
-		
+	
 		Email = self.browser.find_element_by_xpath('//*[@id="signup_email"]')
 		Email.send_keys(email)			
 		self.bSubmit.click()
-		time.sleep(3)
 	
 	def close_browser(self):
 	
@@ -71,4 +72,9 @@ class get_captcha:
 		captcha_input_box = self.browser.find_element_by_xpath('//*[@id="captcha1"]')
 		captcha_input_box.send_keys(captcha_value);time.sleep(1)
 		self.bSubmit.click()
+	
+	def delete_all_screenshots(self, original, cropped):
+	
+		os.remove(original)
+		os.remove(cropped)
 	

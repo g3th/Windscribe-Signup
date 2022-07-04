@@ -42,4 +42,5 @@ class confirmation_email:
 	
 		browser = webdriver.Chrome()
 		browser.set_window_size(300,600)
-		browser.get(self.confirmation_link);time.sleep(2)
+		browser.get(self.confirmation_link);time.sleep(3)
+		browser.close()
