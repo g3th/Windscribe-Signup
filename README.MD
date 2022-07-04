@@ -9,7 +9,7 @@ Windscribe account.
 
 It will select a random VPN Gate server, connect with Network-Manager, and ping google to determine if the connection is valid. In the future Tracert might be added to determine speed and discard slow connections.
 
-It will then launch the browser, generate user credentials (username, 10 password and email), enter the credentials into the open automated-browser and take a screenshot of the captcha.
+It will then launch the browser, generate user credentials (username, 10 digit alpha-numeric password and email), enter the credentials into the open automated-browser and take a screenshot of the captcha.
 
 Finally it will enter the captcha, create the account, and fetch the verfication link.
 
