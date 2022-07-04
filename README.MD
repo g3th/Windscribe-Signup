@@ -4,7 +4,7 @@
 
 ### Completely automates the registration process, and creates 5 accounts ###
 
-#### Important : It is likely current temporary email will be blocked by sysadmins. It will not be updated frequently. If you have a valid Temp-Email RapidApi api-key (Basic, free, no £ cost) to use let me know.
+*Important : It is likely current temporary email will be blocked by sysadmins. It will not be updated frequently. If you have a valid Temp-Email RapidApi api-key (Basic, free, no £ cost) to use let me know.*
 
 This account maker uses VPN Gate and Developer Email api in order to register for a free
 Windscribe account. 
