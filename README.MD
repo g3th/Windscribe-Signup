@@ -1,4 +1,4 @@
-# Windscribe Account Maker #
+# Windscribe Account Maker (Kali/Debian/Linux) #
 
 ## 10GB Account with Email Verification ##
 
