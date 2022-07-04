@@ -1,11 +1,16 @@
 import servers
 import time
 import os
+import shutil
 
+from bs4 import BeautifulSoup as soup
+from selenium import webdriver
+from random import randint
 from pathlib import Path
 from readimage import get_captcha
-from generator import password_generator, username_generator, create_and_store_a_mailbox, write_credentials_to_file, check_email
+from generator import password_generator, username_generator, write_credentials_to_file
 from header import titleHeader
+from email_confirmation import confirmation_email
 
 page = 'https://www.vpngate.net/en/'
 
@@ -17,7 +22,7 @@ u=username_generator()
 
 open_vpn = servers.download_ovpn_config()
 connect = servers.connect_to_vpn()
-tempmail = create_and_store_a_mailbox()
+tempmail = confirmation_email()
 
 # Check valid VPN Gate Addresses
 # Please comment these out if VPN Gate is down, as you will need to use your own VPN/Proxies
@@ -39,87 +44,64 @@ while True:
 		links_list = len(links_list)
 		break
 
-configuration_number = 0
+number_of_created_accounts = 0
 
-# Download Open VPN Configuration - Check Each VPN - Write Valid VPNs to file
+# Check Valid VPN, Connect, Create Accounts
 
-while configuration_number < links_list:
-
+while number_of_created_accounts < 5:
+	flag = 0 
 	print('\x1bc')
 	titleHeader()
 	
 	with open('config_files/openvpn_config_url_list','r') as urls_file:
-		page_link = page + urls_file.readlines()[1]
+		page_link = page + urls_file.readlines()[randint(0,links_list-1)]
 		
 	url = servers.get_ovpn_configuration_link(page_link)
-	print(url)
 	servers.download_config(url)
+	urls_file.close()
 	
 	print('Connecting to VPN...')
 	
 	if 'Error' in str(connect.set_up_nmcli_connection()):
-		print('Connection Refused')
+		print('Connection Refused'); time.sleep(1);flag = 1
 			
 	if '0 received' in str(connect.ping_connection()):
-		print('Connection Timed Out')
-			
-	else:
+		print('Connection Timed Out'); time.sleep(1);flag = 1
+	
+	elif flag == 0:
 		print('Connection Successful. Current IP: '+ connect.fetch_IPaddr())
-		with open('config_files/valid_vpn_connections','a') as valid_vpngate_connections:
-			valid_vpngate_connections.write(url)
-		valid_vpngate_connections.close()
 		
-	configuration_number +=1
-	time.sleep(2)
-	
-	connect.delete_nmcli_connection()
-	open_vpn.delete_config()
-	
-# Generate credentials (change 'p.generate_password' number to length of your choice)
+		# Generate credentials (change 'p.generate_password' number to length of your choice)
 
-password=p.generate_password(10)
-username = u.generate_a_username()
+		password=p.generate_password(10)
+		username = u.generate_a_username()
 
-temp_mailbox_path = file_path +'/temp_mailboxes'
-credentials_path = file_path +'/credentials'
-credentials_list = [username,":",password]
-
-while True:
-
-	if os.path.exists(temp_mailbox_path):
-		break
+		credentials_path = file_path +'/credentials'
+		credentials_list = [username,":",password]		
 		
-	else:
-		tempmail.write_mailbox_to_file()
-		break
-
-while True:
-
-	if os.path.exists(credentials_path):
-		break
+		email = str(tempmail.create_an_email_address())+'@developermail.com'
+		write_credentials_to_file(username, password, email)
 		
-	else:
-		write_credentials_to_file(credentials_list)
-		break
+		# Start browser, generate + input and write credentials to file
+		# Take a screenshot, crop the screenshot, read the captcha with Tesseract
+		# Return the captcha string, and enter it in browser
 		
-# Start browser, generate + input and write credentials to file
-# Take a screenshot, crop the screenshot, read the captcha with Tesseract
-# Return the captcha string, and enter it in browser
+		captcha = get_captcha()
+		captcha.enter_signup_credentials(username, password, email)
 		
-read_email_from_file = open('config_files/temp_mailboxes','r')
-email = read_email_from_file.readline().split('"')[1]
+		try:
+			abuse = soup.find('div',{'class':'content_message error'})
+			if 'Abuse detected' in abuse:
+				captcha.close_browser_on_error()
+				break
+		except:
+			captcha.take_browser_screenshot('config_files/my_screenshot.png')
+			captcha.resize_the_screenshot()
+			captcha_result = captcha.read_captcha_by_ocr('config_files/captcha_image.png').strip()
+			captcha.enter_captcha(captcha_result)
+			tempmail.get_confirmation_link_email()
+			tempmail.click_confirmation_link()
 
-with open('config_files/created_accounts','a') as accounts:
-	accounts.write(username+":"+password+" --- "+email+"\n")
-accounts.close()
-
-captcha = get_captcha()
-captcha.enter_signup_credentials(username, password, email)
-captcha.take_browser_screenshot('config_files/my_screenshot.png')
-captcha.resize_the_screenshot()
-captcha_result = captcha.read_captcha_by_ocr('config_files/captcha_image.png').strip()
-captcha.enter_captcha(captcha_result)
-
-
-#read_email_from_file.close()
-#check_email()
+			number_of_created_accounts +=1
+		connect.delete_nmcli_connection()
+		open_vpn.delete_config()

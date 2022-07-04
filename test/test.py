@@ -1,9 +1,10 @@
 import io
 import pytesseract
 import subprocess
+import time
 
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageEnhance
 def time_out():
 
 	while True:
@@ -44,14 +45,24 @@ def resize_the_screenshot():
 	width, height = screenshot_image.size
 	left = 160
 	top = 350
-	right = 300
-	bottom = 420
-	captcha_image = screenshot_image.crop((left, top, right, bottom))
+	right = 340
+	bottom = 530
+	captcha_image = screenshot_image.crop((left, top, right, bottom))		
 	newsize = (400, 400)
 	captcha_image = captcha_image.resize(newsize)
 	captcha_image.save('captcha_image.png')
+	
+def enhance_and_clean_captcha_image():
 
+	screenshot_image = Image.open(r"captcha_image.png")
+	brightness = ImageEnhance.Brightness(screenshot_image)
+	color = ImageEnhance.Color(screenshot_image)
+	contrast = ImageEnhance.Contrast(screenshot_image)
+
+	contrast.enhance(10).save('captcha_image.png')
+	
 resize_the_screenshot()
+enhance_and_clean_captcha_image();time.sleep(2)
 captcha = read_captcha('captcha_image.png').strip()
 
 print(captcha)

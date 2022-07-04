@@ -33,6 +33,10 @@ class get_captcha:
 		Email.send_keys(email)			
 		self.bSubmit.click()
 		time.sleep(3)
+	
+	def close_browser_on_error(self):
+	
+		self.browser.close()
 		
 	def take_browser_screenshot(self, directory):
 		
@@ -45,8 +49,8 @@ class get_captcha:
 		
 		screenshot_image = Image.open(r"config_files/my_screenshot.png")
 		width, height = screenshot_image.size
-		left = 160; right = 300
-		top = 350; bottom = 420		
+		left = 160; right = 340
+		top = 350; bottom = 530		
 		captcha_image = screenshot_image.crop((left, top, right, bottom))
 		newsize = (400, 400)
 		captcha_image = captcha_image.resize(newsize)
