@@ -4,6 +4,8 @@
 
 ### Completely automates the registration process, and creates 5 accounts ###
 
+#### Important : It is likely current temporary email will be blocked by sysadmins. It will not be updated frequently. If you have a valid Temp-Email RapidApi api-key (Basic, free, no £ cost) to use let me know.
+
 This account maker uses VPN Gate and Developer Email api in order to register for a free
 Windscribe account. 
 
@@ -15,7 +17,7 @@ The Pillow image library will crop the screenshot, leaving just the captcha box 
 
 Finally the automation will enter the captcha, create the account, and fetch the verfication link.
 
-The program works most times, however since Tesseract is involved, it does not have a 100% captcha-recognition rate. There is also the likelyhood of current temporary email domain quickly being blocked.
+The program works most times, however since Tesseract is involved, it does not have a 100% captcha-recognition rate. 
 
 ---------------------------------------------------------------
 
