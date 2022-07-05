@@ -2,11 +2,13 @@ import servers
 import time
 import os
 import shutil
+import requests
 
 from header import titleHeader
 from bs4 import BeautifulSoup as soup
 from selenium import webdriver
-from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException
+from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException, InvalidSessionIdException
+
 from random import randint
 from pathlib import Path
 from generator import password_generator, username_generator, write_credentials_to_file
@@ -16,6 +18,7 @@ from email_confirmation import confirmation_email
 vpngate = 'https://www.vpngate.net/en/'
 browser_screenshot_file_path = 'config_files/my_screenshot.png'
 captcha_screenshot_file_path = 'config_files/captcha_image.png'
+
 
 print('\x1bc')
 
@@ -92,24 +95,29 @@ while number_of_created_accounts < 5:
 			# Take a screenshot, crop the screenshot, read the captcha with Tesseract
 			# Return the captcha string, and enter it in browser
 			
-			registration = registration_process()
-			
+			registration = registration_process()		
 			registration.enter_signup_credentials(username, password, email)
 			registration.take_browser_screenshot(browser_screenshot_file_path)
 			registration.resize_the_screenshot()
 			captcha_result = registration.read_captcha_by_ocr(captcha_screenshot_file_path).strip()
 			registration.enter_captcha(captcha_result)
-			tempmail.get_confirmation_link_email()
-			tempmail.click_confirmation_link()
-			registration.delete_all_screenshots(browser_screenshot_file_path, captcha_screenshot_file_path)
-			number_of_created_accounts +=1
-			registration.close_browser()
-		
+			
+			if registration.enter_captcha(captcha_result) == True:
+				break
+				
+			else:
+				
+				tempmail.get_confirmation_link_email()	
+				tempmail.click_confirmation_link()
+				registration.delete_all_screenshots(browser_screenshot_file_path, captcha_screenshot_file_path)
+				number_of_created_accounts +=1
+				registration.close_browser()
+			
 		except (NoSuchElementException, ElementNotInteractableException):
 		
-			print('Abuse Detected/IAUM, Closing Browser, Changing VPN...')
-			time.sleep(3)
-			registration.close_browser()
+			print('Abuse Detected/IAUM or Connection aborted \nClosing Browser, Changing VPN...')
+			time.sleep(6)
+			
 
 	connect.delete_nmcli_connection()
 	open_vpn.delete_config()

@@ -4,9 +4,13 @@ import time
 import requests
 import os
 
-from selenium.webdriver.common.action_chains import ActionChains
+
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import ElementNotInteractableException
 from PIL import Image
+
+return_error_message = False
 
 class registration_process:
 
@@ -20,7 +24,7 @@ class registration_process:
 		
 	def enter_signup_credentials(self,user, password, email):
 	
-		time.sleep(1)
+		time.sleep(5)
 		
 		User = self.browser.find_element_by_xpath('//*[@id="username"]')
 		User.send_keys(user)
@@ -32,20 +36,16 @@ class registration_process:
 		Repeat_Pass.send_keys(password)
 	
 		Email = self.browser.find_element_by_xpath('//*[@id="signup_email"]')
-		Email.send_keys(email)			
+		Email.send_keys(email)
 		self.bSubmit.click()
-	
-	def close_browser(self):
-	
-		self.browser.close()
 		
 	def take_browser_screenshot(self, directory):
-		
-		screenshot = self.browser.save_screenshot(directory)
+				
 		scroll_to_captcha_image = self.browser.find_element_by_xpath('//*[@id="captcha_img"]')
 		scrolling = ActionChains(self.browser)
 		scrolling.move_to_element(scroll_to_captcha_image)
-		
+		screenshot = self.browser.save_screenshot(directory)
+			
 	def resize_the_screenshot(self):
 		
 		screenshot_image = Image.open(r"config_files/my_screenshot.png")
@@ -70,11 +70,28 @@ class registration_process:
 		
 	def enter_captcha(self, captcha_value):
 		captcha_input_box = self.browser.find_element_by_xpath('//*[@id="captcha1"]')
-		captcha_input_box.send_keys(captcha_value);time.sleep(1)
+		captcha_input_box.send_keys(captcha_value)
 		self.bSubmit.click()
+		while True:	
+			try:			
+				error_message_xpath = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div/div/form/div[1]')
+				error_message_text = error_message_xpath.text	
+				if 'Wrong captcha supplied' in error_message_text:				
+					print('Tesseract read it wrong, restarting...')
+					return_error_message = True
+					time.sleep(2)
+					break				 		
+			except ElementNotInteractableException:
+				break
+					
+		return return_error_message
 	
 	def delete_all_screenshots(self, original, cropped):
 	
 		os.remove(original)
 		os.remove(cropped)
+		
+	def close_browser(self):
+
+		self.browser.close()
 	
