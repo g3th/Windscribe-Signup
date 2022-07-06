@@ -7,7 +7,7 @@ list_of_proxies = []
 with requests.session() as proxies:
 
 	fetch_proxy_list = proxies.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=socks5&timeout=10000&country=all",timeout=5)
-	
+
 	list_of_proxies = list(fetch_proxy_list.text)
 
 print(list_of_proxies)
