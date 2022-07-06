@@ -7,7 +7,7 @@ import os
 
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import ElementNotInteractableException
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, StaleElementReferenceException
 from PIL import Image
 
 return_error_message = False
@@ -16,7 +16,7 @@ class registration_process:
 
 	def __init__(self):
 		
-		self.browser = webdriver.Chrome()
+		self.browser = webdriver.Firefox()
 		self.browser.set_window_size(100,550)
 		self.browser.get('https://windscribe.com/signup')
 		self.inputOutput = io.BytesIO()
@@ -24,8 +24,7 @@ class registration_process:
 		
 	def enter_signup_credentials(self,user, password, email):
 	
-		time.sleep(5)
-		
+		time.sleep(2)
 		User = self.browser.find_element_by_xpath('//*[@id="username"]')
 		User.send_keys(user)
 	
@@ -36,9 +35,9 @@ class registration_process:
 		Repeat_Pass.send_keys(password)
 	
 		Email = self.browser.find_element_by_xpath('//*[@id="signup_email"]')
-		Email.send_keys(email)
+		Email.send_keys(email)	
 		self.bSubmit.click()
-		
+		time.sleep(2)
 	def take_browser_screenshot(self, directory):
 				
 		scroll_to_captcha_image = self.browser.find_element_by_xpath('//*[@id="captcha_img"]')
@@ -69,19 +68,19 @@ class registration_process:
 		return captcha
 		
 	def enter_captcha(self, captcha_value):
+		return_error_message = False
 		captcha_input_box = self.browser.find_element_by_xpath('//*[@id="captcha1"]')
 		captcha_input_box.send_keys(captcha_value)
 		self.bSubmit.click()
 		while True:	
 			try:			
-				error_message_xpath = browser.find_element_by_xpath('/html/body/div[1]/div[3]/div/div/form/div[1]')
+				error_message_xpath = self.browser.find_element_by_xpath('/html/body/div[1]/div[3]/div/div/form/div[1]')
 				error_message_text = error_message_xpath.text	
 				if 'Wrong captcha supplied' in error_message_text:				
-					print('Tesseract read it wrong, restarting...')
 					return_error_message = True
 					time.sleep(2)
 					break				 		
-			except ElementNotInteractableException:
+			except (NoSuchElementException, ElementNotInteractableException, StaleElementReferenceException):
 				break
 					
 		return return_error_message

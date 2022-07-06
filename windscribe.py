@@ -6,7 +6,6 @@ import requests
 
 from header import titleHeader
 from bs4 import BeautifulSoup as soup
-from selenium import webdriver
 from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException, InvalidSessionIdException
 
 from random import randint
@@ -89,8 +88,6 @@ while number_of_created_accounts < 5:
 			password = p.generate_password(10)		
 			email = str(tempmail.create_an_email_address())+'@developermail.com'
 			
-			write_credentials_to_file(username, password, email)
-			
 			# Start browser, generate + input and write credentials to file
 			# Take a screenshot, crop the screenshot, read the captcha with Tesseract
 			# Return the captcha string, and enter it in browser
@@ -100,24 +97,24 @@ while number_of_created_accounts < 5:
 			registration.take_browser_screenshot(browser_screenshot_file_path)
 			registration.resize_the_screenshot()
 			captcha_result = registration.read_captcha_by_ocr(captcha_screenshot_file_path).strip()
-			registration.enter_captcha(captcha_result)
 			
 			if registration.enter_captcha(captcha_result) == True:
+				print('Tesseract read it wrong, restarting...')
 				break
 				
 			else:
-				
 				tempmail.get_confirmation_link_email()	
 				tempmail.click_confirmation_link()
 				registration.delete_all_screenshots(browser_screenshot_file_path, captcha_screenshot_file_path)
 				number_of_created_accounts +=1
 				registration.close_browser()
-			
+				write_credentials_to_file(username, password, email)
+					
 		except (NoSuchElementException, ElementNotInteractableException):
 		
 			print('Abuse Detected/IAUM or Connection aborted \nClosing Browser, Changing VPN...')
-			time.sleep(6)
+			time.sleep(3)
 			
-
+	
 	connect.delete_nmcli_connection()
 	open_vpn.delete_config()
