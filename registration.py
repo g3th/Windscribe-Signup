@@ -10,8 +10,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, StaleElementReferenceException
 from PIL import Image
 
-return_error_message = False
-
 class registration_process:
 
 	def __init__(self):
