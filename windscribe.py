@@ -67,7 +67,7 @@ while True:
 		break
 		
 
-index = 30 # Change this to start at any chosen VPN Configuration in /config_files/
+index = 0 # Change this to start at any chosen VPN Configuration in /config_files/
 
 
 while number_of_created_accounts < 5:
@@ -87,7 +87,7 @@ while number_of_created_accounts < 5:
 	
 		try:
 			
-			print('Connection Successful. Current IP: '+ connect.fetch_IPaddr())
+			print('Connection Successful. Current IP: {}'.format(connect.fetch_IPaddr()[0] + ' - City: ' + connect.fetch_IPaddr()[1]))
 			
 			# Generate credentials (change 'p.generate_password' number to length of your choice)
 			
@@ -101,25 +101,25 @@ while number_of_created_accounts < 5:
 			
 			registration = registration_process()
 			registration.enter_signup_credentials(username, password, email)
+			time.sleep(2)
 			registration.take_browser_screenshot(browser_screenshot_file_path)
 			registration.resize_the_screenshot()
 			captcha_result = registration.read_captcha_by_ocr(captcha_screenshot_file_path).strip()
 			
 			if registration.enter_captcha(captcha_result) == True:
 				print('Tesseract read it wrong, restarting...')
-				
+				registration.close_browser()
 			else:
 				tempmail.get_confirmation_link_email()	
 				tempmail.click_confirmation_link()
-				registration.delete_all_screenshots(browser_screenshot_file_path, captcha_screenshot_file_path)
-				number_of_created_accounts +=1
-				registration.close_browser()
+				registration.delete_all_screenshots(browser_screenshot_file_path, captcha_screenshot_file_path)			
 				write_credentials_to_file(username, password, email)
-					
+				registration.close_browser()
+				number_of_created_accounts +=1
 		except (NoSuchElementException, ElementNotInteractableException):
-		
+			registration.close_browser()
 			print('Abuse Detected/IAUM or Connection aborted \nClosing Browser, Changing VPN...')
 			time.sleep(3)
-	index +=1		
+	index +=1
 	connect.delete_nmcli_connection()
 	connect.delete_list_elements()

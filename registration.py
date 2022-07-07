@@ -5,6 +5,7 @@ import requests
 import os
 
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, StaleElementReferenceException
 from PIL import Image
@@ -35,7 +36,7 @@ class registration_process:
 	
 		Email = self.browser.find_element_by_xpath('//*[@id="signup_email"]')
 		Email.send_keys(email)
-		self.bSubmit.send_keys(Keys.ENTER)
+		self.bSubmit.click()
 		time.sleep(2)
 	def take_browser_screenshot(self, directory):
 				

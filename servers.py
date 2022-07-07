@@ -74,9 +74,12 @@ class connect_to_vpn:
 	def fetch_IPaddr(self):
 	
 		fetch_current_ip_address = requests.get('http://httpbin.org/ip')
+		scrape_current_ip_url = requests.get('https://www.showmyip.com/')
+		fetch_current_city = soup(scrape_current_ip_url.text,'html.parser')
+		current_ip_city = fetch_current_city.find_all('tr')
 		human_readable_ip_address = fetch_current_ip_address.text.split('"')[3].strip(" ")
-		
-		return human_readable_ip_address
+		human_readable_city = current_ip_city[4].text.replace('City','').strip()	
+		return human_readable_ip_address, human_readable_city
 		
 	def delete_nmcli_connection(self):
 		
