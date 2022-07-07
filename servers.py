@@ -26,16 +26,11 @@ class download_ovpn_config:
 				configuration_download_page_links.append(str(link).split('"')[1].replace('&amp;','&'))
 
 		return configuration_download_page_links
-		
-	def delete_config(self):
-		
-		os.remove('config_files/config.ovpn')
 
 		
-def download_config(config_url):
-	print('Downloading Open VPN config file...')
+def download_config(config_url, index_number):
 	download = config_url
-	parse_ovpn_configuration_link = ['wget', '-O', 'config_files/config.ovpn', '"', download, '"']		
+	parse_ovpn_configuration_link = ['wget', '-O', 'config_files/config'+index_number+'.ovpn', '"', download, '"']		
 	subprocess.run(parse_ovpn_configuration_link, shell=False, stderr= subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 		
 def get_ovpn_configuration_link(page_link):
@@ -51,16 +46,24 @@ class connect_to_vpn:
 
 	def __init__(self):
 	
-		self.ovpn_config = ['nmcli','connection','import','type','openvpn','file', str(Path(__file__).parent)+'/config_files/config.ovpn']
-		self.connect = ['nmcli','connection','up','config']
-		self.delete_connection = ['nmcli','connection','delete','id','config']
+		self.ovpn_config = ['nmcli','connection','import','type','openvpn','file']
+		self.connect = ['nmcli','connection','up']
+		self.delete_connection = ['nmcli','connection','delete','id']
 				
-	def set_up_nmcli_connection(self):
-			
+	def set_up_nmcli_connection(self,index):
+		self.ovpn_config.insert(6, str(Path(__file__).parent)+'/config_files/config'+str(index) + '.ovpn')
+		self.connect.insert(3, 'config'+str(index))
+		self.delete_connection.insert(4, 'config'+str(index))
 		nmcli_add_vpn = subprocess.run (self.ovpn_config, shell = False, stdout = subprocess.DEVNULL)
-		nmcli_connect_vpn = subprocess.run (self.connect, shell= False, stdout = subprocess.DEVNULL, stderr = subprocess.PIPE)	
+		nmcli_connect_vpn = subprocess.run (self.connect, shell= False, stdout = subprocess.DEVNULL, stderr = subprocess.PIPE)			
 		return nmcli_connect_vpn.stderr
 		
+	def delete_list_elements(self):
+	
+		del self.ovpn_config[6]
+		del self.connect[3]
+		del self.delete_connection[4]
+			
 	def ping_connection(self):
 	
 		ping_command = ['ping','-c1','8.8.8.8']	

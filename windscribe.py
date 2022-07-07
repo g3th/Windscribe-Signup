@@ -18,17 +18,12 @@ vpngate = 'https://www.vpngate.net/en/'
 browser_screenshot_file_path = 'config_files/my_screenshot.png'
 captcha_screenshot_file_path = 'config_files/captcha_image.png'
 
-
-print('\x1bc')
-
 file_path = str(Path(__file__).parent)
 p=password_generator()
 u=username_generator()
-
-open_vpn = servers.download_ovpn_config()
 connect = servers.connect_to_vpn()
+open_vpn = servers.download_ovpn_config()
 tempmail = confirmation_email()
-
 
 # Check valid VPN Gate Addresses
 # Please comment these out if VPN Gate is down, as you will need to use your own VPN/Proxies
@@ -45,7 +40,7 @@ while True:
 		links_list = open_vpn.get_all_page_links()
 		with open('config_files/openvpn_config_url_list','a') as openvpn_urls:
 			for link in links_list:
-				openvpn_urls.write(link+"\n")
+				openvpn_urls.write(vpngate+link+"\n")
 		openvpn_urls.close()
 		links_list = len(links_list)
 		break
@@ -54,23 +49,35 @@ number_of_created_accounts = 0
 
 # Check Valid VPN, Connect, Create Accounts
 
+while True:
+	titleHeader()
+	if len(os.listdir('config_files')) > 10:
+		print('Open VPN Config Files Already Exist.')
+		time.sleep(3)
+		break
+		
+	else:	
+		print('Downloading '+str(links_list)+' Open VPN config files...')
+		with open('config_files/openvpn_config_url_list','r') as urls_file:
+			page_link = urls_file.readlines()
+			for line in range(len(page_link)):
+				url = servers.get_ovpn_configuration_link(page_link[line])
+				servers.download_config(url, str(line))
+		urls_file.close()
+		break
+		
+
+index = 30 # Change this to start at any chosen VPN Configuration in /config_files/
+
+
 while number_of_created_accounts < 5:
 
 	flag = 0
-	
-	print('\x1bc')
-	titleHeader()
-	
-	with open('config_files/openvpn_config_url_list','r') as urls_file:
-		page_link = vpngate + urls_file.readlines()[randint(0 , links_list-1)]
-		
-	url = servers.get_ovpn_configuration_link(page_link)
-	servers.download_config(url)
-	urls_file.close()
-	
+
+	titleHeader()	
 	print('Connecting to VPN...')
 	
-	if 'Error' in str(connect.set_up_nmcli_connection()):
+	if 'Error' in str(connect.set_up_nmcli_connection(index)):
 		print('Connection Refused'); time.sleep(1); flag = 1
 			
 	if '0 received' in str(connect.ping_connection()):
@@ -92,7 +99,7 @@ while number_of_created_accounts < 5:
 			# Take a screenshot, crop the screenshot, read the captcha with Tesseract
 			# Return the captcha string, and enter it in browser
 			
-			registration = registration_process()		
+			registration = registration_process()
 			registration.enter_signup_credentials(username, password, email)
 			registration.take_browser_screenshot(browser_screenshot_file_path)
 			registration.resize_the_screenshot()
@@ -100,7 +107,6 @@ while number_of_created_accounts < 5:
 			
 			if registration.enter_captcha(captcha_result) == True:
 				print('Tesseract read it wrong, restarting...')
-				break
 				
 			else:
 				tempmail.get_confirmation_link_email()	
@@ -114,7 +120,6 @@ while number_of_created_accounts < 5:
 		
 			print('Abuse Detected/IAUM or Connection aborted \nClosing Browser, Changing VPN...')
 			time.sleep(3)
-			
-	
+	index +=1		
 	connect.delete_nmcli_connection()
-	open_vpn.delete_config()
+	connect.delete_list_elements()

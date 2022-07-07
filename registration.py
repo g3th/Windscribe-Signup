@@ -4,9 +4,8 @@ import time
 import requests
 import os
 
-
 from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, StaleElementReferenceException
 from PIL import Image
 
@@ -16,7 +15,7 @@ class registration_process:
 
 	def __init__(self):
 		
-		self.browser = webdriver.Firefox()
+		self.browser = webdriver.Chrome()
 		self.browser.set_window_size(100,550)
 		self.browser.get('https://windscribe.com/signup')
 		self.inputOutput = io.BytesIO()
@@ -35,8 +34,8 @@ class registration_process:
 		Repeat_Pass.send_keys(password)
 	
 		Email = self.browser.find_element_by_xpath('//*[@id="signup_email"]')
-		Email.send_keys(email)	
-		self.bSubmit.click()
+		Email.send_keys(email)
+		self.bSubmit.send_keys(Keys.ENTER)
 		time.sleep(2)
 	def take_browser_screenshot(self, directory):
 				
