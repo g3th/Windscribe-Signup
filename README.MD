@@ -4,20 +4,24 @@
 
 ### Completely automates the registration process, and creates 5 accounts ###
 
-*Important : It is likely current temporary email will be blocked by sysadmins. It will not be updated frequently. If you have a valid Temp-Email RapidApi api-key (Basic, free, no £ cost) to use let me know.*
+*Important : Likely current temp email will be blocked by sysadmins. If you have valid Temp-Email RapidApi api-key (Basic, free) let me know.*
 
-This account maker uses VPN Gate and Developer Email api in order to register for a free
-Windscribe account. 
+Uses VPN Gate and Developer Email api in order to register for free Windscribe account. 
 
-It will select a random VPN Gate server, connect with Network-Manager, and ping google to determine if the connection is valid. In the future Tracert might be added to determine speed and discard slow connections.
+Downloads and selects VPN Gate ovpn config, and connects with nmcli.
 
-It will then launch the browser, generate user credentials (username, 10 digit alpha-numeric password and email), enter the credentials into the open automated-browser and take a screenshot of the browser.
+Launches chrome, generates credentials (user, 10 digit alpha-num pass and email), takes browser screenshot.
 
-The Pillow image library will crop the screenshot, leaving just the captcha box in order for Tesseract to work its magic (or get it wrong, mostly by one letter).
+Enters captchas, solves w/ Tesseract and fetches verfication link.
 
-Finally the automation will enter the captcha, create the account, and fetch the verfication link.
+Due to free nature of VPN Gate, it will take a long time. This is due to:
 
-The program works most times, however since Tesseract is involved, it does not have a 100% captcha-recognition rate. 
+1) Cloudflare blocks (i.e. Access Denied, IAUM etc)
+2) Blocked elements in page (i.e. click button is not clickable by automation)
+3) Timeouts, refused connections etc...
+4) Tesseract getting it wrong sometimes
+
+It was built only as an excercise, not to abuse a service, and 5 accounts are more than enough.
 
 ---------------------------------------------------------------
 
