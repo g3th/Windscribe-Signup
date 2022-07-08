@@ -118,7 +118,7 @@ while number_of_created_accounts < 5:
 				number_of_created_accounts +=1
 		except (NoSuchElementException, ElementNotInteractableException):
 			registration.close_browser()
-			print('Abuse Detected/IAUM or Connection aborted \nClosing Browser, Changing VPN...')
+			print('Abuse Detected/IUAM or Connection aborted \nClosing Browser, Changing VPN...')
 			time.sleep(3)
 	index +=1
 	connect.delete_nmcli_connection()
