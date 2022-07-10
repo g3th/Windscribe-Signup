@@ -16,7 +16,7 @@ Enters captchas, solves w/ Tesseract and fetches verfication link.
 
 Due to free nature of VPN Gate, it will take a long time. This is due to:
 
-1) Cloudflare blocks (i.e. Access Denied, IAUM etc)
+1) Cloudflare blocks (i.e. Access Denied, IUAM etc)
 2) Blocked elements in page (i.e. click button is not clickable by automation)
 3) Timeouts, refused connections etc...
 4) Tesseract getting it wrong sometimes
