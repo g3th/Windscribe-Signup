@@ -1,11 +1,8 @@
-import os
 import requests
 import subprocess
-import json
 
 from pathlib import Path
 from bs4 import BeautifulSoup as soup
-from random import randint
 
 configuration_download_page_links = []
 page = 'https://www.vpngate.net/en/'

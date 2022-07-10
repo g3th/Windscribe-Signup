@@ -1,12 +1,7 @@
-#!/usr/bin/python3
-#secure password generator
-
 import requests
-import os
 
 from bs4 import BeautifulSoup as bs
 from random import randint
-from pathlib import Path
 
 class password_generator():
 
