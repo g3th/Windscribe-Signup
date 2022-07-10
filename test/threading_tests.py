@@ -60,15 +60,23 @@ with open('openvpn_config_url_list','a') as openvpn_urls:
 		openvpn_urls.write(vpngate+link+"\n")
 openvpn_urls.close()
 
-link_list = []
+futures_list = []
+downloading_urls = []
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
 	with open('openvpn_config_url_list','r') as configs:
 		for line in configs.readlines():
-			a = executor.submit(get_ovpn_configuration_link, line)
-			link_list.append(a)
-			
-print(link_list)
+			threads = executor.submit(get_ovpn_configuration_link, line)
+			futures_list.append(threads)
+		for returned_value in futures_list:
+			result = returned_value.result()
+			downloading_urls.append(result)
+with open('downloading_urls','a') as ovpn_configs:
+	for link in downloading_urls:
+		ovpn_configs.write(link+"\n")
+ovpn_configs.close()
+
+
 			
 
 
