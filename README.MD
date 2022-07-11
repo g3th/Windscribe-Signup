@@ -8,13 +8,15 @@
 
 Uses VPN Gate and Developer Email api in order to register for free Windscribe account. 
 
-Downloads and selects VPN Gate ovpn config, and connects with nmcli.
+Downloads and selects VPN Gate ovpn config using threading, and connects with nmcli.
 
 Launches chrome, generates credentials (user, 10 digit alpha-num pass and email), takes browser screenshot.
 
 Enters captchas, solves w/ Tesseract and fetches verfication link.
 
-Due to free nature of VPN Gate, it will take a long time. This is due to:
+Due to free nature of VPN Gate, it might take a long time. It is recommended to start VPN Index at a integer greater than 30, due to the fact that previous VPN IPs in the list are blocked, as they are mainly used for University research and are not residential.
+
+The errors will automatically be detected and the script restarted. These mainly are:
 
 1) Cloudflare blocks (i.e. Access Denied, IUAM etc)
 2) Blocked elements in page (i.e. click button is not clickable by automation)
