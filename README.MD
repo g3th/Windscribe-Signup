@@ -4,6 +4,8 @@
 
 ### Completely automates the registration process, and creates 5 accounts ###
 
+https://user-images.githubusercontent.com/74467654/178326839-48104687-10f5-4c82-ba00-daea1f1372fb.mp4
+
 *Important : Likely current temp email will be blocked by sysadmins. If you have valid Temp-Email RapidApi api-key (Basic, free) let me know.*
 
 Uses VPN Gate and Developer Email api in order to register for free Windscribe account. 
