@@ -25,11 +25,12 @@ class download_ovpn_config:
 		return configuration_download_page_links
 
 		
-def download_config(config_url, index_number):
+def download_config(config_url, file_number):
 	download = config_url
-	parse_ovpn_configuration_link = ['wget', '-O', 'config_files/config'+index_number+'.ovpn', '"', download, '"']		
-	subprocess.run(parse_ovpn_configuration_link, shell=False, stderr= subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-		
+	fetch_configuration_file_bytes = requests.get(config_url).content
+	with open('config_files/config'+str(file_number)+'.ovpn','wb') as open_vpn_file:
+		open_vpn_file.write(fetch_configuration_file_bytes)
+	
 def get_ovpn_configuration_link(page_link):
 
 	config_download_page_links = page_link
