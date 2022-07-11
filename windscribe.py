@@ -39,7 +39,6 @@ if __name__ == '__main__':
 	os.makedirs(file_path + '/config_files')
 
 	with open('config_files/openvpn_config_url_list','a') as openvpn_urls:
-		print('Scraping Web Pages directing to OVPN.config-download-pages')
 		for link in open_vpn.get_all_page_links():
 			openvpn_urls.write(vpngate + link + "\n")
 	openvpn_urls.close()
@@ -63,9 +62,10 @@ if __name__ == '__main__':
 					executor.submit(servers.download_config, url, str(configuration_number))
 					configuration_number += 1
 
-	index = 10 # Start Index at chosen location (i.e. index = 40), as long as not exceeding number of total downloaded vpn configs
+	index = 30  # Start Index at chosen location (i.e. index = 40), as long as not exceeding number of total downloaded vpn configs
+				# It is recommended to start this at 30 or 40, as IPs early in the list are unlikely to work
+				
 	number_of_created_accounts = 0
-
 	while number_of_created_accounts < 5:
 
 		flag = 0
@@ -80,7 +80,7 @@ if __name__ == '__main__':
 			print('Connection Successful. Current IP: {}'.format(connect.fetch_IPaddr()[0] + ' - City: ' + connect.fetch_IPaddr()[1]))
 			try:
 			
-				registration = registration_process()			
+				registration = registration_process()	
 				username = u.generate_a_username()
 				password = p.generate_password(10)		
 				email = str(tempmail.create_an_email_address())+'@developermail.com'				
@@ -103,7 +103,8 @@ if __name__ == '__main__':
 					number_of_created_accounts +=1
 					
 			except (NoSuchElementException, ElementNotInteractableException):				
-				print('Abuse Detected/IUAM or Connection aborted \nClosing Browser, Changing VPN...')			
+				print('Abuse Detected/IUAM or Connection aborted \nClosing Browser, Changing VPN...')
+				time.sleep(0.6)			
 		
 		index +=1
 		connect.delete_nmcli_connection()
