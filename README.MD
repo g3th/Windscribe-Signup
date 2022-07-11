@@ -16,7 +16,7 @@ Launches chrome, generates credentials (user, 10 digit alpha-num pass and email)
 
 Enters captchas, solves w/ Tesseract and fetches verfication link.
 
-Due to free nature of VPN Gate, it might take a long time. It is recommended to start VPN Index at an integer greater than 30, due to the fact that previous VPN IPs in the list are blocked, as they are mainly used for University research and are not residential.
+Due to free nature of VPN Gate, it might take a long time. It is recommended to start VPN Index at an integer greater than 30 due to the fact that previous VPN IPs in the list are blocked, as they are mainly used for University research and are not residential.
 
 The errors will automatically be detected and the script restarted. These mainly are:
 
