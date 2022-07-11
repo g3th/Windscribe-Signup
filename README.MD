@@ -29,7 +29,13 @@ It was built only as an excercise, not to abuse a service, and 5 accounts are mo
 
 ---------------------------------------------------------------
 
-### Requires: ##
+### Requirements: ##
+
+Install requirements with:
+
+```python3 -r requirements.txt```
+
+or Manually:
 
 Network Manager and OpenVPN:
 
