@@ -1,0 +1,19 @@
+[project]
+name = "Windscribe-Signup"
+version = "2.0"
+authors = [
+  { name="Roberto Toledo", email="theinkandpen@yahoo.co.uk" },
+]
+description = "Windscribe 10GB Account Generator"
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.10.5"
+classifiers = [
+    "Programming Language :: Python :: 3.10.5",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Linux/Debian",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/g3th/Windscribe-Signup"
+"Bug Tracker" = "https://github.com/g3th/Windscribe-Signup/issues"
