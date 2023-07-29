@@ -34,6 +34,7 @@ class confirmation_email:
             if self.wait_counter > 10:
                 print("Something went wrong. Reloading.")
                 time.sleep(3)
+                break
             title()
             try:
                 temp_mail_domains_message_id = requests.get(self.temp_email, headers=self.parameters).json()['result']
