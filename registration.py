@@ -4,6 +4,7 @@ import time
 import os
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, StaleElementReferenceException
@@ -12,8 +13,10 @@ from PIL import Image
 class registration_process:
 
 	def __init__(self):
-		
-		self.browser = webdriver.Chrome()
+
+		self.browser_options = Options()
+		self.browser_options.add_experimental_option('excludeSwitches', ['enable-logging'])
+		self.browser = webdriver.Chrome(options=self.browser_options)
 		self.browser.set_window_size(100,550)
 		self.browser.get('https://windscribe.com/signup')
 		self.inputOutput = io.BytesIO()

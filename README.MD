@@ -32,7 +32,7 @@ The errors will automatically be detected and the script restarted. These mainly
 
 Install requirements with:
 
-```python3 -r requirements.txt```
+```pip install -r requirements.txt```
 
 or Manually:
 
